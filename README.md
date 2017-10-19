@@ -10,10 +10,16 @@ This is all we want and can do with this script.
 ## Preparation
 
 You need *python 3* (we used version *3.6.2*) to run the script.
-All further requirements can be installed with *pip 3* via `pip3 install -r requirements.txt --user`.
+All further requirements can be installed with *pip 3* via 
+```
+pip3 install -r requirements.txt --user
+```
 
-Check whether installation was successful via `python3 grouping.py --help`,
-which should print all available options of the script.
+Check whether installation was successful by printing all available options of the script.
+```
+python3 grouping.py --help
+```
+
 
 ## Examples
 
@@ -21,6 +27,7 @@ which should print all available options of the script.
 ```
 $ python3 grouping.py --group-count 2 --player-name Tick Trick Track Donald Gustav
 ```
+
 2. randomly assign a lot of students from a list to the groups of three games.
 ```
 $ cat example/students.txt | python3 grouping.py --group-count 6 3 4 --player-name -
