@@ -1,0 +1,1 @@
+First students groups: {{#player.0.group}} {{name}} {{/player.0.group}}

@@ -1,0 +1,50 @@
+<html>
+    <head>
+        <style>
+         body {
+             font-family: Arial;
+         }
+         table {
+            border-collapse: collapse;
+            width: 100%;
+         }
+
+         table, th, td {
+            border: 1px solid black;
+         }
+
+         td, th {
+            text-align: left;
+            height: 30px;
+            padding: 10px;
+         }
+        </style>
+    </head>
+    <body>
+        <table>
+            <tr><th></th><th>Name</th><th>Groups</th> </tr>
+                {{#player | enum}}<tr>
+            <td>{{.0 | addone}}</td><td>{{.1.name}}</td><td>{{#.1.group}}{{name}}&ensp;&ensp;{{/.1.group}}</td>
+            </tr>{{/player}}
+        </table>
+
+    <br/>
+    <br/>
+
+    {{#game | enum}}
+    <br/>
+    <table>
+        <tr>
+            <th>Game {{.0 | addone}}</th>
+            {{#.1.group}}
+            <th>{{name}}</th>
+            {{/.1.group}}
+        </tr>
+        <tr>
+            <td><b>#</b> members</td>
+            {{#.1.group}}
+            <td>{{player | len}}</td>
+            {{/.1.group}}</tr>
+        </table> {{/game}}
+    </body>
+</html>

@@ -1,0 +1,24 @@
+{{#player | enum}}
+{{.0 | addone}}. {{.1.name}} - {{#.1.group}}{{name}} {{/.1.group}}
+{{/player}}
+
+---------------
+
+{{#game | enum}}
+Game {{.0 | addone}}:
+{{#.1.group}}
+  {{name}}:
+{{#player | enum}}
+    {{.0 | addone}}. {{.1.name}}
+{{/player}}
+{{/.1.group}}
+{{/game}}
+
+---------------
+
+{{#game | enum}}
+Game {{.0 | addone}}:
+{{#.1.group}}
+  {{name}}: {{player | len}} members
+{{/.1.group}}
+{{/game}}
