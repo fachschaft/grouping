@@ -35,6 +35,7 @@ def parse_args():
     parser.add_argument("-g", "--group-count",
                         nargs="+",
                         type=int,
+                        required=True,
                         help="number of players in group. pass multiple for multiple games.")
     parser.add_argument("-p", "--player-name",
                         nargs="+",
