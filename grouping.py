@@ -45,6 +45,9 @@ def parse_args():
     parser.add_argument("-l", "--group-name",
                         nargs="+",
                         help="name of groups.")
+    parser.add_argument("-G", "--game-name",
+                        nargs="+",
+                        help="name of games.")
     parser.add_argument("--seed",
                         type=int,
                         default=210591,
@@ -76,17 +79,18 @@ def game_groups_from_players(players):
     return games
 
 
-def render(template_path, player_groups):
+def render(template_path, player_groups, game_names):
     game_groups = game_groups_from_players(player_groups)
     context = {'player': [{'name': pname,
                            'group': [{'name': gname}
                                      for gname in groups]}
                           for pname, groups in player_groups],
-               'game': [{'group': [{'name': group_name,
+               'game': [{'name': game_name,
+                         'group': [{'name': group_name,
                                     'player': [{'name': player_name}
                                                for player_name in players]}
                                    for group_name, players in sorted(groups.items())]}
-                       for groups in game_groups]}
+                        for game_name, groups in zip(game_names, game_groups)]}
 
     mustache.filters['len'] = lambda list_in: len(list_in)
     mustache.filters['addone'] = lambda x: x + 1
@@ -112,7 +116,13 @@ def main():
     group_names = args.group_name
     if group_names is None:
         group_names = []
-    group_names += ['Group {}'.format(i+1) for i in range(len(group_names), max(group_counts))]
+    group_names = ['Group {}'.format(i+1) for i in range(len(group_names), max(group_counts))]
+
+    game_count = len(group_counts)
+    game_names = args.game_name
+    if game_names is None:
+        game_names = []
+    game_names += ['Game {}'.format(i+1) for i in range(len(game_names), game_count)]
 
     template_dir = args.template_dir
     if template_dir is None:
@@ -120,7 +130,7 @@ def main():
     template_path = os.path.join(template_dir, '{}.{}'.format(args.template, args.to))
 
     player_group_list = player_groups(player_names, group_counts, group_names, args.seed)
-    out = render(template_path, player_group_list)
+    out = render(template_path, player_group_list, game_names)
     if args.output is None:
        print(out)
     else:

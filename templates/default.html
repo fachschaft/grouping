@@ -31,20 +31,20 @@
     <br/>
     <br/>
 
-    {{#game | enum}}
+    {{#game}}
     <br/>
     <table>
         <tr>
-            <th>Game {{.0 | addone}}</th>
-            {{#.1.group}}
             <th>{{name}}</th>
-            {{/.1.group}}
+            {{#group}}
+            <th>{{name}}</th>
+            {{/group}}
         </tr>
         <tr>
             <td><b>#</b> members</td>
-            {{#.1.group}}
+            {{#group}}
             <td>{{player | len}}</td>
-            {{/.1.group}}</tr>
+            {{/group}}</tr>
         </table> {{/game}}
     </body>
 </html>

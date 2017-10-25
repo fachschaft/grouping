@@ -33,10 +33,10 @@ $ python3 grouping.py --group-count 2 --player-name Tick Trick Track Donald Gust
 $ cat example/students.txt | python3 grouping.py --group-count 6 3 4 --player-name -
 ```
 
-3. save the list as a pretty html file with custom group names and add some empty rows for latecomers.
+3. save the list as a pretty html file, use custom game and group names, add some empty rows for latecomers.
 ```
 $ cat example/students.txt |\
-  python3 grouping.py --group-count 6 3 4 --group-name A B C D E F --player-name - -n 50 --to html -o groups.html
+  python3 grouping.py --group-count 6 3 4 --group-name A B C D E F --game_name 'Welche Fahne weht?' Fussball Tischtennis --player-name - -n 50 --to html -o groups.html
 ```
 
 4. only print the very first student's groups via custom template. 
