@@ -83,8 +83,8 @@ def game_groups_from_players(players):
 def render(template_path, player_groups, game_names):
     game_groups = game_groups_from_players(player_groups)
     context = {'player': [{'name': pname,
-                           'group': [{'name': gname}
-                                     for gname in groups]}
+                           'group': [{'name': gname, 'game-name': game_name}
+                                     for game_name, gname in zip(game_names, groups)]}
                           for pname, groups in player_groups],
                'game': [{'name': game_name,
                          'group': [{'name': group_name,
@@ -95,6 +95,7 @@ def render(template_path, player_groups, game_names):
 
     mustache.filters['len'] = lambda list_in: len(list_in)
     mustache.filters['addone'] = lambda x: x + 1
+
     with open(template_path, 'r') as f:
         template = f.read()
         out = mustache.render(template, context)
@@ -117,7 +118,7 @@ def main():
     group_names = args.group_name
     if group_names is None:
         group_names = []
-    group_names = ['Group {}'.format(i+1) for i in range(len(group_names), max(group_counts))]
+    group_names += ['Group {}'.format(i+1) for i in range(len(group_names), max(group_counts))]
 
     game_count = len(group_counts)
     game_names = args.game_name
