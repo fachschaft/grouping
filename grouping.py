@@ -20,12 +20,19 @@ def random_group_indices(group_count, num, seed):
     return tuple(itertools.islice(random_group_index_gen(group_count), num))
 
 
-def player_groups(player_names, group_counts, group_names, seed):
+def select_group_name(group_names, group_index, should_cycle, group_counts, game_index):
+    if should_cycle:
+        wasted_group_count = sum(group_counts[:game_index])
+        group_names = group_names[wasted_group_count:]
+
+    return group_names[group_index]
+
+def player_groups(player_names, group_counts, group_names, cycle_group_names, seed):
     n_players = len(player_names)
     games = [random_group_indices(count, n_players, seed+ind)
              for ind, count in enumerate(group_counts)]
-    player_groups = [[group_names[groups[player_ind]]
-                      for groups in games]
+    player_groups = [[select_group_name(group_names, groups[player_ind], cycle_group_names, group_counts, game_index)
+                      for game_index, groups in enumerate(games)]
                      for player_ind in range(n_players)]
     return list(zip(player_names, player_groups))
 
@@ -46,6 +53,8 @@ def parse_args():
     parser.add_argument("-l", "--group-name",
                         nargs="+",
                         help="name of groups.")
+    parser.add_argument('--cycle-group-name', action='store_true',
+                        help='cycle through group names for games instead of reusing.')
     parser.add_argument("-G", "--game-name",
                         nargs="+",
                         help="name of games.")
@@ -114,11 +123,16 @@ def main():
     if player_count is not None:
         player_names += ['' for i in range(len(player_names), max(len(player_names), player_count))]
 
+    cycle_group_names = args.cycle_group_name
     group_counts = args.group_count
     group_names = args.group_name
+    if cycle_group_names:
+        group_name_count = sum(group_counts)
+    else:
+        group_name_count = max(group_counts)
     if group_names is None:
         group_names = []
-    group_names += ['Group {}'.format(i+1) for i in range(len(group_names), max(group_counts))]
+    group_names += ['Group {}'.format(i+1) for i in range(len(group_names), group_name_count)]
 
     game_count = len(group_counts)
     game_names = args.game_name
@@ -131,7 +145,7 @@ def main():
         template_dir = os.path.join(os.path.dirname(__file__),'templates')
     template_path = os.path.join(template_dir, '{}.{}'.format(args.template, args.to))
 
-    player_group_list = player_groups(player_names, group_counts, group_names, args.seed)
+    player_group_list = player_groups(player_names, group_counts, group_names, cycle_group_names, args.seed)
     out = render(template_path, player_group_list, game_names)
     if args.output is None:
        print(out)
